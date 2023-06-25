@@ -53,18 +53,10 @@ var _ = ginkgo.Describe("[Precompiles]", ginkgo.Ordered, func() {
 		utils.RunDefaultHardhatTests(ctx, "reward_manager")
 	})
 
-	// and then runs the hardhat tests for each one without forcing precompile developers to modify this file.
-	// ADD YOUR PRECOMPILE HERE
-	/*
-		ginkgo.It("your precompile", ginkgo.Label("Precompile"), ginkgo.Label("YourPrecompile"), func() {
-			ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
-			defer cancel()
+	ginkgo.It("counter", ginkgo.Label("Precompile"), ginkgo.Label("Counter"), func() {
+        ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+        defer cancel()
 
-			// Specify the name shared by the genesis file in ./tests/precompile/genesis/{your_precompile}.json
-			// and the test file in ./contracts/tests/{your_precompile}.ts
-			// If you want to use a different test command and genesis path than the defaults, you can
-			// use the utils.RunTestCMD. See utils.RunDefaultHardhatTests for an example.
-			utils.RunDefaultHardhatTests(ctx, "your_precompile")
-		})
-	*/
+        utils.RunDefaultHardhatTests(ctx, "counter")
+    })
 })
