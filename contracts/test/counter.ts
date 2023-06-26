@@ -32,12 +32,15 @@ describe("ExampleCounter", function () {
     );
   });
 
+  // Reads initial value from the counter, expected 0
   it("should readCounter properly", async function () {
     let result = await counterContract.callStatic.readCounter();
     expect(result).to.equal("0");
+    console.log(`Result: ${result}`);
   });
 
-  it("contract should not be able to increment without enabled", async function () {
+  // Counter is not enabled yet
+  it("contract should not be able to increment without being enabled", async function () {
     const modifiedCounter = "11";
     let contractRole = await adminSignerPrecompile.readAllowList(
       counterContract.address
@@ -49,10 +52,11 @@ describe("ExampleCounter", function () {
     } catch (err) {
       return;
     }
-    expect.fail("should have errored");
+    expect.fail("should have thrown error");
   });
 
-  it("should be add contract to enabled list", async function () {
+  // Adds counter precompile to enabled Allowlist
+  it("should add contract to enabled list", async function () {
     let contractRole = await adminSignerPrecompile.readAllowList(
       counterContract.address
     );
@@ -68,13 +72,43 @@ describe("ExampleCounter", function () {
     expect(contractRole).to.be.equal(1); // 1 = ENABLED
   });
 
-  it("should setCounter and readCounter", async function () {
+  // Increments counter by 11 now
+  it("should increaseCounter by 11 now", async function () {
+    let res = await counterContract.callStatic.readCounter();
+
     const modifiedCounter = "11";
     let tx = await counterContract.setCounter(modifiedCounter);
     await tx.wait();
 
     expect(await counterContract.callStatic.readCounter()).to.be.equal(
-      modifiedCounter
+      String(+res + +modifiedCounter)
     );
   });
+
+  // Again reads the counter value
+  it("should readCounter properly for updated value", async function () {
+    let result = await counterContract.callStatic.readCounter();
+    console.log(`Result: ${result}`); // Shows the modified counter value
+    expect(result).to.equal("11");
+  });
+
+  // Increased counter by default value now
+  it("should increaseCounter by 1 now", async function () {
+    let res = await counterContract.callStatic.readCounter();
+
+    const modifiedCounter = "";
+    let tx = await counterContract.setCounter(modifiedCounter);
+    await tx.wait();
+
+    expect(await counterContract.callStatic.readCounter()).to.be.equal(
+      String(+res + 1) // hardcoded 1 because that is the default value precompile uses when input = ""
+    );
+  });
+
+  it("should readCounter properly for updated value", async function () {
+    let result = await counterContract.callStatic.readCounter();
+    console.log(`Result: ${result}`); // Shows the modified counter value
+    expect(result).to.equal("12");
+  });
+  
 });
