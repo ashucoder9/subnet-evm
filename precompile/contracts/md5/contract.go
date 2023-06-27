@@ -5,14 +5,12 @@
 package md5
 
 import (
-	"errors"
 	"fmt"
-	"math/big"
+	"crypto/md5"
 
 	"github.com/ava-labs/subnet-evm/accounts/abi"
 	"github.com/ava-labs/subnet-evm/precompile/allowlist"
 	"github.com/ava-labs/subnet-evm/precompile/contract"
-	"github.com/ava-labs/subnet-evm/vmerrs"
 
 	_ "embed"
 
@@ -26,17 +24,8 @@ const (
 	// There are some predefined gas costs in contract/utils.go that you can use.
 	// This contract also uses AllowList precompile.
 	// You should also increase gas costs of functions that read from AllowList storage.
-	Md5HashGasCost uint64 = 1 /* SET A GAS COST HERE */
+	Md5HashGasCost uint64 = contract.ReadGasCostPerSlot /* SET A GAS COST HERE */
 )
-
-// CUSTOM CODE STARTS HERE
-// Reference imports to suppress errors from unused imports. This code and any unnecessary imports can be removed.
-var (
-	_ = abi.JSON
-	_ = errors.New
-	_ = big.NewInt
-)
-
 // Singleton StatefulPrecompiledContract and signatures.
 var (
 
@@ -92,24 +81,20 @@ func md5Hash(accessibleState contract.AccessibleState, caller common.Address, ad
 	if remainingGas, err = contract.DeductGas(suppliedGas, Md5HashGasCost); err != nil {
 		return nil, 0, err
 	}
-	// attempts to unpack [input] into the arguments to the Md5HashInput.
-	// Assumes that [input] does not include selector
-	// You can use unpacked [inputStruct] variable in your code
+
 	inputStruct, err := UnpackMd5HashInput(input)
 	if err != nil {
 		return nil, remainingGas, err
 	}
 
-	// CUSTOM CODE STARTS HERE
-	_ = inputStruct // CUSTOM CODE OPERATES ON INPUT
-
-	var output [16]byte // CUSTOM CODE FOR AN OUTPUT
+	data := []byte(inputStruct)
+	var output [16]byte
+	output = md5.Sum(data)
 	packedOutput, err := PackMd5HashOutput(output)
 	if err != nil {
 		return nil, remainingGas, err
 	}
 
-	// Return the packed output and the remaining gas
 	return packedOutput, remainingGas, nil
 }
 

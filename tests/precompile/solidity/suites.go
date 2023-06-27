@@ -53,6 +53,13 @@ var _ = ginkgo.Describe("[Precompiles]", ginkgo.Ordered, func() {
 		utils.RunDefaultHardhatTests(ctx, "reward_manager")
 	})
 
+	ginkgo.It("md5", ginkgo.Label("Precompile"), ginkgo.Label("Md5"), func() {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+
+		utils.RunDefaultHardhatTests(ctx, "md5")
+	})
+
 	// and then runs the hardhat tests for each one without forcing precompile developers to modify this file.
 	// ADD YOUR PRECOMPILE HERE
 	/*
