@@ -82,9 +82,9 @@ func PackGetCounterOutput(result string) ([]byte, error) {
 	return CounterABI.PackOutput("getCounter", result)
 }
 
-func GetStorage(stateDB contract.StateDB) string {
+func GetStorage(stateDB contract.StateDB) uint256 {
     value := stateDB.GetState(ContractAddress, storageKeyHash)
-    return string(common.TrimLeftZeroes(value.Bytes()))
+    return uint256(common.TrimLeftZeroes(value.Bytes()))
 }
 
 func getCounter(accessibleState contract.AccessibleState, caller common.Address, addr common.Address, input []byte, suppliedGas uint64, readOnly bool) (ret []byte, remainingGas uint64, err error) {
@@ -127,7 +127,7 @@ func PackIncreaseCounter(response string) ([]byte, error) {
 	return CounterABI.Pack("increaseCounter", response)
 }
 
-func StoreInput(stateDB contract.StateDB, input string) {
+func StoreInput(stateDB contract.StateDB, input uint256) {
     inputPadded := common.LeftPadBytes([]byte(input), common.HashLength)
     inputHash := common.BytesToHash(inputPadded)
 

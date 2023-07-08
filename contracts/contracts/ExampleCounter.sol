@@ -7,11 +7,11 @@ contract ExampleCounter {
   address constant COUNTER_ADDRESS = 0x0300000000000000000000000000000000000009;
   ICounter ck = ICounter(COUNTER_ADDRESS);
 
-  function readCounter() public view returns (string memory) {
+  function readCounter() public view returns (uint256 memory) {
     return ck.getCounter();
   }
 
-  function setCounter(string calldata X) public {
+  function setCounter(uint256 calldata X) public {
     ck.increaseCounter(X);
   }
 }

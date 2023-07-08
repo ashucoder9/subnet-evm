@@ -8,8 +8,8 @@ import "./IAllowList.sol";
 
 interface ICounter is IAllowList {
   // getCounter returns the stored value
-  function getCounter() external view returns (string calldata result);
+  function getCounter() external view returns (uint256 calldata result);
 
   // increaseCounter changes the counter state
-  function increaseCounter(string calldata response) external;
+  function increaseCounter(uint256 calldata response) external;
 }
